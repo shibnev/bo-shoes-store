@@ -1,0 +1,15 @@
+$name: main;
+
+.#{$name} {
+  $this: &;
+
+  // == media ==
+  @media #{$laptop} {
+  }
+
+  @media #{$tablet} {
+  }
+
+  @media #{$mobile} {
+  }
+}

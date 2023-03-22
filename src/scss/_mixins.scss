@@ -1,0 +1,225 @@
+// -- px to rem --
+@function rem($pixels, $context: $mainFontSize) {
+  @if (unitless($pixels)) {
+    $pixels: $pixels * 1px;
+  }
+  @if (unitless($context)) {
+    $context: $context * 1px;
+  }
+  @return $pixels / $context * 1rem;
+}
+
+
+// -- font-face --
+
+@mixin font-face($name, $path, $weight: null, $style: null, $exts: eot woff2 woff ttf svg) {
+  $src: null;
+
+  $extmods: (
+    eot: "?",
+    svg: ""
+  );
+
+  $formats: (
+    otf: "opentype",
+    ttf: "truetype"
+  );
+
+  @each $ext in $exts {
+    $extmod: if(map-has-key($extmods, $ext), $ext + map-get($extmods, $ext), $ext);
+    $format: if(map-has-key($formats, $ext), map-get($formats, $ext), $ext);
+    $src: append($src, url(quote($path + "." + $extmod)) format(quote($format)), comma);
+  }
+
+  @font-face {
+    font-family: quote($name);
+    font-style: $style;
+    font-weight: $weight;
+    // font-display: auto;
+    src: $src;
+  }
+}
+
+// -- aspect ratio --
+
+@mixin aspect-ratio($width, $height) {
+  position: relative;
+  &:before {
+    display: block;
+    content: "";
+    width: 100%;
+    padding-top: ($height / $width) * 100%;
+  }
+  > .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
+
+@mixin center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@mixin y-center {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+@mixin x-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+
+@mixin hide {
+  visibility: hidden;
+  opacity: 0;
+  z-index: -1;
+  position: absolute;
+}
+
+@mixin show {
+  visibility: visible;
+  opacity: 1;
+  position: relative;
+  z-index: auto;
+}
+
+@mixin spread {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+@mixin hideText {
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+@mixin btn-reset {
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+@mixin pic-wrapper {
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+@mixin spread-block {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
+@mixin bg {
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+@mixin abs-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin pseudo {
+  content: '';
+  display: block;
+  position: absolute;
+}
+
+@mixin btm-line($pb: 1px, $switcher: on, $bg-size: 1px) {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  transition: background-size .3s ease-in-out;
+  padding-bottom: $pb;
+  width: max-content;
+
+  @if $switcher==on {
+    background-position: 0% 100%;
+    background-size: 100% $bg-size;
+
+    &:hover {
+      background-position: 100% 100%;
+      background-size: 0% $bg-size;
+    }
+
+  }
+
+  @else if $switcher==off {
+    background-position: 100% 100%;
+    background-size: 0% $bg-size;
+
+    &:hover {
+      background-position: 0% 100%;
+      background-size: 100% $bg-size;
+    }
+  }
+
+  @content;
+}
+
+@mixin grid-row($size: 100px) {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax($size, 1fr));
+}
+
+@mixin custom-list($type: '-', $padding: 1rem) {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-left: $padding;
+
+    &:after {
+      content: $type;
+      position: absolute;
+      left: 0;
+    }
+  }
+}
+
+@mixin svg-icon {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
